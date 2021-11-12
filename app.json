@@ -1,0 +1,12 @@
+{
+  "name": "petlove",
+  "displayName": "petlove",
+  "expo": {
+    "name": "petlove",
+    "slug": "petlove",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
