@@ -1,0 +1,131 @@
+import React, { useState, useCallback, useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_IP, API_ENDPOINT } from "@env";
+import { Masks } from "react-native-mask-input";
+
+import {
+  Container,
+  Header,
+  Title,
+  FormWrapper,
+  Card,
+  Row,
+  TextBold,
+  TextNormal
+} from "./styled";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { MaskedInput } from "../../components/form/MaskedInput";
+import { Button } from "../../components/form/Button";
+import { Alert } from "react-native";
+
+interface VaccinationProps {
+  id: number;
+  animal: number;
+  vacina: number;
+  data_aplicacao: string;
+  data_aplicacao_brl: string;
+  descVacina: string;
+  nomeAnimal: string;
+}
+
+export function EditVaccination() {
+
+  const [vaccinationInfo, setVaccinationInfo] = useState<VaccinationProps>({} as VaccinationProps);
+  const [date, setDate] = useState("");
+  const Navigation = useNavigation();
+
+  async function getVaccinationInfo() {
+    const dataKey = "@petlove:current_vaccination_to_edit";
+    const currentVaccine = await AsyncStorage.getItem(dataKey);
+    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byid/${currentVaccine}`;
+    const response = await fetch(endPoint, { method: "GET" })
+      .then(response => response.json());
+
+    setVaccinationInfo(response);
+  }
+
+  function FormataStringData(data: string) {
+    var dia = data.split("/")[0];
+    var mes = data.split("/")[1];
+    var ano = data.split("/")[2];
+
+    return ano + '-' + ("0" + mes).slice(-2) + '-' + ("0" + dia).slice(-2);
+  }
+
+  async function edit() {
+    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/update/${vaccinationInfo.id}`;
+    if (date.trim().length !== 10) {
+      return Alert.alert("Entre com uma data válida!");
+    }
+    const params = {
+      data_aplicacao: FormataStringData(date)
+    };
+
+    const response = await fetch(endPoint, {
+      method: "PUT",
+      body: JSON.stringify(params)
+    }).then(response => response.json());
+
+    if (Number(response.status) === 200) {
+
+      //pegar o ID do pet atual
+      const currentPet = await AsyncStorage.getItem("@petlove:current_pet");
+      const currentPetJson = JSON.parse(currentPet!);
+      const petId = currentPetJson[0].id;
+
+      const newEndPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byanimal/${petId}`;
+      const newList = await fetch(newEndPoint, { method: "GET" })
+        .then(response => response.json());
+
+      await AsyncStorage.setItem("@petlove:current_pet_vaccination", JSON.stringify(newList));
+
+      setDate("");
+      Navigation.goBack();
+    }
+
+    return Alert.alert(response.message);
+  }
+
+  useFocusEffect(
+    useCallback(() => {
+      getVaccinationInfo();
+    }, [])
+  );
+
+  return (
+    <Container>
+      <Header>
+        <Title>Alterar data da vacinação</Title>
+      </Header>
+
+      <FormWrapper>
+        <Card>
+          <Row>
+            <TextBold>Vacina:</TextBold>
+            <TextNormal>{vaccinationInfo.descVacina}</TextNormal>
+          </Row>
+
+          <Row>
+            <TextBold>Animal:</TextBold>
+            <TextNormal>{vaccinationInfo.nomeAnimal}</TextNormal>
+          </Row>
+
+          <Row>
+            <TextBold>Última aplicação:</TextBold>
+            <TextNormal>{vaccinationInfo.data_aplicacao_brl}</TextNormal>
+          </Row>
+        </Card>
+
+        <MaskedInput
+          value={date}
+          onChangeText={setDate}
+          mask={Masks.DATE_DDMMYYYY}
+          placeholder="Nova data de aplicação"
+          keyboardType="numeric"
+        />
+
+        <Button title="Salvar" onPress={edit} />
+      </FormWrapper>
+    </Container>
+  );
+}

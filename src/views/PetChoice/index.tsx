@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useNavigation } from "@react-navigation/native";
+import { API_IP, API_ENDPOINT } from "@env";
 
 import {
   Container,
@@ -28,9 +30,16 @@ interface PetProps {
 
 export function PetChoice() {
   const [currentPet, setCurrentPet] = useState<PetProps>({} as PetProps);
+  const { navigate } = useNavigation();
 
   async function handleButtonPressedVaccine() {
-    console.log("Ir para a página de vacinação");
+    const dataKey = "@petlove:current_pet_vaccination";
+    const petId = currentPet.id;
+    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byanimal/${petId}`;
+    const response = await fetch(endPoint, { method: "GET" })
+      .then(response => response.json());
+    await AsyncStorage.setItem(dataKey, JSON.stringify(response));
+    navigate("Vaccination");
   }
 
   async function handleButtonPressedDocs() {
@@ -57,8 +66,6 @@ export function PetChoice() {
   useEffect(() => {
     getPetInformation();
   }, []);
-
-  console.log(currentPet);
 
   return (
     <Container>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Text } from "react-native";
 import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -91,9 +91,11 @@ export function Home() {
     loadUserData();
   }, []);
 
-  useFocusEffect(() => {
-    loadCompanies();
-  });
+  useFocusEffect(
+    useCallback(() => {
+      loadCompanies();
+    }, [])
+  );
 
   const { navigate } = useNavigation();
 
