@@ -6,6 +6,7 @@ import { SignUp } from "../views/SignUp";
 import { Home } from "../views/Home";
 import { Pets } from "../views/Pets";
 import { NewPet } from "../views/NewPet";
+import { PetChoice } from "../views/PetChoice";
 
 const Stack = createStackNavigator();
 
@@ -23,6 +24,7 @@ export function DefaultStackRoutes({ page }: PageProps) {
       <Stack.Screen name="Home" component={Home} />
       <Stack.Screen name="Pets" component={Pets} />
       <Stack.Screen name="NewPet" component={NewPet} />
+      <Stack.Screen name="PetChoice" component={PetChoice} />
     </Stack.Navigator>
   );
 }

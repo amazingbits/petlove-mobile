@@ -27,7 +27,12 @@ export function Pets() {
 
   async function handleButton(id: string) {
     const dataKey = "@petlove:current_pet";
-    await AsyncStorage.setItem(dataKey, id);
+    const endPoint = `http://${API_IP}${API_ENDPOINT}/animal/info/byanimal/${id}`;
+    const response = await fetch(endPoint, { method: "GET" })
+      .then(response => response.json());
+
+    await AsyncStorage.setItem(dataKey, JSON.stringify(response));
+    navigate("PetChoice");
   }
 
   async function update() {
