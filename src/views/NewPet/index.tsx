@@ -3,8 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   Container,
-  Header,
-  Title,
   FormWrapper,
   SelectItem,
   SelectItemView,
@@ -16,8 +14,9 @@ import { MaskedInput } from "../../components/form/MaskedInput";
 import { Button } from "../../components/form/Button";
 import { Alert } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Header } from "../../components/Header";
 
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 
 interface NewPetProps {
   sexo: string;
@@ -95,7 +94,7 @@ export function NewPet() {
     };
 
     const params = JSON.stringify(petData);
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/animal/save`;
+    const endPoint = `${API_PATH}/animal/save`;
 
     const response = await fetch(endPoint, {
       method: "POST",
@@ -120,9 +119,7 @@ export function NewPet() {
 
   return (
     <Container>
-      <Header>
-        <Title>Novo pet</Title>
-      </Header>
+      <Header title="Novo pet" />
 
       <FormWrapper>
 

@@ -1,12 +1,10 @@
 import React, { useState, useCallback, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 import { Masks } from "react-native-mask-input";
 
 import {
   Container,
-  Header,
-  Title,
   FormWrapper,
   Card,
   Row,
@@ -17,6 +15,7 @@ import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { MaskedInput } from "../../components/form/MaskedInput";
 import { Button } from "../../components/form/Button";
 import { Alert } from "react-native";
+import { Header } from "../../components/Header";
 
 interface VaccinationProps {
   id: number;
@@ -37,7 +36,7 @@ export function EditVaccination() {
   async function getVaccinationInfo() {
     const dataKey = "@petlove:current_vaccination_to_edit";
     const currentVaccine = await AsyncStorage.getItem(dataKey);
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byid/${currentVaccine}`;
+    const endPoint = `${API_PATH}/vacinacao/byid/${currentVaccine}`;
     const response = await fetch(endPoint, { method: "GET" })
       .then(response => response.json());
 
@@ -53,7 +52,7 @@ export function EditVaccination() {
   }
 
   async function edit() {
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/update/${vaccinationInfo.id}`;
+    const endPoint = `${API_PATH}/vacinacao/update/${vaccinationInfo.id}`;
     if (date.trim().length !== 10) {
       return Alert.alert("Entre com uma data válida!");
     }
@@ -73,7 +72,7 @@ export function EditVaccination() {
       const currentPetJson = JSON.parse(currentPet!);
       const petId = currentPetJson[0].id;
 
-      const newEndPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byanimal/${petId}`;
+      const newEndPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
       const newList = await fetch(newEndPoint, { method: "GET" })
         .then(response => response.json());
 
@@ -86,6 +85,45 @@ export function EditVaccination() {
     return Alert.alert(response.message);
   }
 
+  async function removeAlert() {
+    Alert.alert("Atenção!", "Tem certeza que deseja remover este registro?", [
+      {
+        text: "Sim",
+        onPress: () => {
+          removeRegister();
+        }
+      },
+      {
+        text: "Não",
+        onPress: () => { }
+      },
+    ]);
+
+  }
+
+  async function removeRegister() {
+    const vaccineId = vaccinationInfo.id;
+    const animalId = vaccinationInfo.animal;
+
+    const endPoint = `${API_PATH}/vacinacao/delete/${vaccineId}`;
+    const response = await fetch(endPoint, { method: "DELETE" })
+      .then(response => response.json());
+
+    if (Number(response.status) === 200) {
+
+      const newEndPoint = `${API_PATH}/vacinacao/byanimal/${animalId}`;
+      const newList = await fetch(newEndPoint, { method: "GET" })
+        .then(response => response.json());
+
+      await AsyncStorage.setItem("@petlove:current_pet_vaccination", JSON.stringify(newList));
+
+      setDate("");
+      Navigation.goBack();
+
+    }
+    console.log(response);
+  }
+
   useFocusEffect(
     useCallback(() => {
       getVaccinationInfo();
@@ -94,9 +132,7 @@ export function EditVaccination() {
 
   return (
     <Container>
-      <Header>
-        <Title>Alterar data da vacinação</Title>
-      </Header>
+      <Header title="Alterar data da vacinação" />
 
       <FormWrapper>
         <Card>
@@ -125,6 +161,7 @@ export function EditVaccination() {
         />
 
         <Button title="Salvar" onPress={edit} />
+        <Button title="Excluir" onPress={removeAlert} />
       </FormWrapper>
     </Container>
   );

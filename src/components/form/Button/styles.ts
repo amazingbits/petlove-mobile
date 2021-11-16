@@ -6,6 +6,7 @@ export const Container = styled(RectButton)`
   width: 100%;
   border-radius: 10px;
   background-color: ${({ theme }) => theme.colors.primary};
+  margin-bottom: 10px;
 `;
 
 export const Title = styled.Text`

@@ -16,7 +16,7 @@ import { Button } from "../../components/form/Button";
 
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { API_IP } from "@env";
+import { API_PATH } from "@env";
 
 interface UserDataProps {
   email: string;
@@ -46,7 +46,7 @@ export function SignIn() {
     };
     setUserData(userData);
 
-    const endPoint = `http://${API_IP}:80/petlove/api-new/auth/loginbyapp`;
+    const endPoint = `${API_PATH}/auth/loginbyapp`;
 
     const response = await fetch(endPoint, {
       method: "POST",
@@ -90,7 +90,7 @@ export function SignIn() {
           </OptionButton>
 
           <OptionButton>
-            <OptionButtonText>Esqueci a senha</OptionButtonText>
+            <OptionButtonText onPress={() => navigate("ForgotPassword")}>Esqueci a senha</OptionButtonText>
           </OptionButton>
         </OptionsWrapper>
       </FormWrapper>

@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
+import { Header } from "../../components/Header";
 
 import {
   Container,
-  Header,
-  Title,
   ButtonWrapper,
   ResumeWrapper,
   DogImage,
@@ -35,7 +34,7 @@ export function PetChoice() {
   async function handleButtonPressedVaccine() {
     const dataKey = "@petlove:current_pet_vaccination";
     const petId = currentPet.id;
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byanimal/${petId}`;
+    const endPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
     const response = await fetch(endPoint, { method: "GET" })
       .then(response => response.json());
     await AsyncStorage.setItem(dataKey, JSON.stringify(response));
@@ -43,7 +42,7 @@ export function PetChoice() {
   }
 
   async function handleButtonPressedDocs() {
-    console.log("Ir para a página de documentos");
+    navigate("Documents");
   }
 
   async function getPetInformation() {
@@ -69,9 +68,7 @@ export function PetChoice() {
 
   return (
     <Container>
-      <Header>
-        <Title>{currentPet.nome}</Title>
-      </Header>
+      <Header title={currentPet.nome} />
 
       <ResumeWrapper>
         <DogImage source={require("../../assets/cao.png")} style={{

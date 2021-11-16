@@ -19,7 +19,6 @@ import theme from './src/global/styles/theme';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { DefaultStackRoutes } from "./src/routes/app.route";
-import { BottomRoutes } from "./src/routes/bottom.route";
 import { Home } from "./src/views/Home";
 
 

@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 
 import {
   Container,
-  Header,
-  Title,
   List,
   ListWrapper
 } from "./styles";
 import { NewBtn } from "../../components/NewBtn";
 import { ButtonVaccination } from "../../components/ButtonVaccination";
 import { useTheme } from "styled-components";
+import { Header } from "../../components/Header";
 
 interface PetProps {
   animal_comportamento: string;
@@ -78,11 +77,10 @@ export function Vaccination() {
     }, [])
   );
 
+  const title = `${currentPet.nome} - Vacinação`;
   return (
     <Container>
-      <Header>
-        <Title>{currentPet.nome} - Vacinação</Title>
-      </Header>
+      <Header title={title} />
 
       <ListWrapper>
         <List

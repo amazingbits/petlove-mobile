@@ -23,7 +23,7 @@ interface LocationProps {
   longitude: string;
 }
 
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH, API_IP } from "@env";
 
 export function Home() {
 
@@ -46,7 +46,7 @@ export function Home() {
   async function loadCompanies() {
 
     if (location.latitude !== undefined) {
-      const endPoint = `http://${API_IP}${API_ENDPOINT}/usuario/pesquisarempresas/raio/${location.latitude}/${location.longitude}`;
+      const endPoint = `${API_PATH}/usuario/pesquisarempresas/raio/${location.latitude}/${location.longitude}`;
 
       const companies = await fetch(endPoint, {
         method: "GET",
@@ -62,7 +62,7 @@ export function Home() {
 
   async function findCompanyByName(name: string) {
     const bar = name.trim().length === 0 ? "" : "/";
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/usuario/pesquisarempresas/byname${bar}${name}`;
+    const endPoint = `${API_PATH}/usuario/pesquisarempresas/byname${bar}${name}`;
     const response = await fetch(endPoint, { method: "GET" })
       .then(response => response.json())
       .catch(error => []);

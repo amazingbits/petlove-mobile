@@ -3,15 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import {
   Container,
-  Header,
-  Title,
   PetList
 } from "./styles";
 
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 import { PetCard } from "../../components/PetCard";
 import { NewBtn } from "../../components/NewBtn";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
+import { Header } from "../../components/Header";
 
 interface UserProps {
   id: string;
@@ -27,7 +26,7 @@ export function Pets() {
 
   async function handleButton(id: string) {
     const dataKey = "@petlove:current_pet";
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/animal/info/byanimal/${id}`;
+    const endPoint = `${API_PATH}/animal/info/byanimal/${id}`;
     const response = await fetch(endPoint, { method: "GET" })
       .then(response => response.json());
 
@@ -49,7 +48,7 @@ export function Pets() {
   }, []);
 
   async function getAnimalList(idUser: string) {
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/animal/info/byuser/${idUser}`;
+    const endPoint = `${API_PATH}/animal/info/byuser/${idUser}`;
     const res = await fetch(endPoint, { method: "GET" })
       .then(response => response.json())
       .catch(error => []);
@@ -63,9 +62,7 @@ export function Pets() {
 
   return (
     <Container>
-      <Header>
-        <Title>Meus pets</Title>
-      </Header>
+      <Header title="Meus pets" />
 
       <PetList
         data={animalList}

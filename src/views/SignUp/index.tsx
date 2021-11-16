@@ -15,7 +15,7 @@ import { Button } from "../../components/form/Button";
 
 import { useNavigation } from "@react-navigation/native";
 
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 
 interface NewUserProps {
   name: string;
@@ -37,7 +37,7 @@ export function SignUp() {
   const { navigate } = useNavigation();
 
   async function handleSaveNewUser() {
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/usuario/newUserByApp`;
+    const endPoint = `${API_PATH}/usuario/newUserByApp`;
 
     if (userPassword !== userRPassword) {
       return Alert.alert("As senhas não conferem!");

@@ -2,19 +2,18 @@ import React, { useState, useEffect, useCallback } from "react";
 import { Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import { API_IP, API_ENDPOINT } from "@env";
+import { API_PATH } from "@env";
 
 import { Masks } from "react-native-mask-input";
 import {
   Container,
-  Header,
-  Title,
   FormWrapper,
   SelectItemView,
   SelectItem
 } from "./styles";
 import { MaskedInput } from "../../components/form/MaskedInput";
 import { Button } from "../../components/form/Button";
+import { Header } from "../../components/Header";
 
 export function NewVaccination() {
   const [vaccine, setVaccine] = useState("");
@@ -60,7 +59,7 @@ export function NewVaccination() {
       data_aplicacao: dateVac
     };
 
-    const endPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/save`;
+    const endPoint = `${API_PATH}/vacinacao/save`;
 
     const response = await fetch(endPoint, {
       method: "POST",
@@ -68,7 +67,7 @@ export function NewVaccination() {
     }).then(response => response.json());
 
     if (Number(response.status) === 201) {
-      const newEndPoint = `http://${API_IP}${API_ENDPOINT}/vacinacao/byanimal/${petId}`;
+      const newEndPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
       const newList = await fetch(newEndPoint, { method: "GET" })
         .then(response => response.json());
       const dataKey = "@petlove:current_pet_vaccination";
@@ -88,9 +87,7 @@ export function NewVaccination() {
 
   return (
     <Container>
-      <Header>
-        <Title>Cadastrar vacinação</Title>
-      </Header>
+      <Header title="Cadastrar vacinação" />
 
       <FormWrapper>
         <SelectItemView>

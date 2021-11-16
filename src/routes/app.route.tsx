@@ -10,6 +10,10 @@ import { PetChoice } from "../views/PetChoice";
 import { Vaccination } from "../views/Vaccination";
 import { NewVaccination } from "../views/NewVaccination";
 import { EditVaccination } from "../views/EditVaccination";
+import { NewDocument } from "../views/NewDocument";
+import { Documents } from "../views/Documents";
+import { EditDocument } from "../views/EditDocument";
+import { ForgotPassword } from "../views/ForgotPassword";
 
 const Stack = createStackNavigator();
 
@@ -31,6 +35,10 @@ export function DefaultStackRoutes({ page }: PageProps) {
       <Stack.Screen name="Vaccination" component={Vaccination} />
       <Stack.Screen name="NewVaccination" component={NewVaccination} />
       <Stack.Screen name="EditVaccination" component={EditVaccination} />
+      <Stack.Screen name="Documents" component={Documents} />
+      <Stack.Screen name="NewDocument" component={NewDocument} />
+      <Stack.Screen name="EditDocument" component={EditDocument} />
+      <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
     </Stack.Navigator>
   );
 }
