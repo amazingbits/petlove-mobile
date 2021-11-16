@@ -27,36 +27,47 @@ import { API_PATH, API_IP } from "@env";
 
 export function Home() {
 
-  const [location, setLocation] = useState<LocationProps>({} as LocationProps);
+  const [location, setLocation] = useState<LocationProps | null>(null);
   const [company, setCompany] = useState([]);
   const [search, setSearch] = useState('');
   const [userData, setUserData] = useState([]);
+
+  const imgServerPrefix = `http://${API_IP}/petlove/sistema/assets/media/user_img/`;
+  const Navigation = useNavigation();
+
   async function loadUserData() {
     const dataKey = "@petlove:user";
     const user = await AsyncStorage.getItem(dataKey);
-    if (user) {
-      const userData = JSON.parse(user);
-      setUserData(userData);
+    const userJson = JSON.parse(user!);
+    setUserData(userJson);
+  }
+
+  async function loadCompanies() {
+    if (location) {
+      const endPoint = `${API_PATH}/usuario/pesquisarempresas/raio/${location.latitude}/${location.longitude}`;
+      const companies = await fetch(endPoint, { method: "GET" })
+        .then(response => response.json());
+      setCompany(companies);
     } else {
-      setUserData([]);
+      findCompanyByName("");
     }
   }
 
-  const imgServerPrefix = `http://${API_IP}/petlove/sistema/assets/media/user_img/`;
-  async function loadCompanies() {
-
-    if (location.latitude !== undefined) {
-      const endPoint = `${API_PATH}/usuario/pesquisarempresas/raio/${location.latitude}/${location.longitude}`;
-
-      const companies = await fetch(endPoint, {
-        method: "GET",
-      }).then(response => response.json())
-        .catch(error => error.text());
-
-      setCompany(companies);
-
+  async function getUserLocation() {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    const dataKey = "@petlove:location";
+    if (status !== "granted") {
+      //usuário não permitiu a localicação
+      await AsyncStorage.removeItem(dataKey);
+      setLocation(null);
     } else {
-      findCompanyByName("");
+      let location = await Location.getCurrentPositionAsync({});
+      const locationData = {
+        longitude: String(location.coords.latitude),
+        latitude: String(location.coords.longitude)
+      }
+      setLocation(locationData);
+      await AsyncStorage.setItem(dataKey, JSON.stringify(locationData));
     }
   }
 
@@ -70,35 +81,6 @@ export function Home() {
     setCompany(response);
   }
 
-  useEffect(() => {
-    (async () => {
-      const dataKey = "@petlove:location";
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        await AsyncStorage.removeItem(dataKey);
-      } else {
-        let location = await Location.getCurrentPositionAsync({});
-        const locationData = {
-          latitude: String(location.coords.latitude),
-          longitude: String(location.coords.longitude)
-        }
-
-        setLocation(locationData);
-        await AsyncStorage.setItem(dataKey, JSON.stringify(locationData));
-      }
-    })();
-
-    loadUserData();
-  }, []);
-
-  useFocusEffect(
-    useCallback(() => {
-      loadCompanies();
-    }, [])
-  );
-
-  const { navigate } = useNavigation();
-
   function handleButton() {
     findCompanyByName(search);
   }
@@ -106,8 +88,19 @@ export function Home() {
   async function logout() {
     const dataKey = "@petlove:user";
     await AsyncStorage.removeItem(dataKey);
-    navigate("SignIn");
+    Navigation.navigate("SignIn");
   }
+
+  useFocusEffect(
+    useCallback(() => {
+      loadUserData();
+      getUserLocation();
+    }, [])
+  );
+
+  useEffect(() => {
+    loadCompanies();
+  }, [location]);
 
   return (
     <Container>
