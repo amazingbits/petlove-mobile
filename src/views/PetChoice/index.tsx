@@ -13,7 +13,8 @@ import {
   DogCard,
   Row,
   CardTitle,
-  CardInfo
+  CardInfo,
+  ResumeBtn
 } from "./styles";
 import { PetButton } from "../../components/PetButton";
 
@@ -71,10 +72,13 @@ export function PetChoice() {
       <Header title={currentPet.nome} />
 
       <ResumeWrapper>
-        <DogImage source={require("../../assets/cao.png")} style={{
-          width: 100,
-          height: 100
-        }} />
+
+        <ResumeBtn onPress={() => navigate("AnimalResume")}>
+          <DogImage source={require("../../assets/cao.png")} style={{
+            width: 100,
+            height: 100
+          }} />
+        </ResumeBtn>
 
         <DogCard>
           <Row>

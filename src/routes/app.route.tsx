@@ -14,6 +14,7 @@ import { NewDocument } from "../views/NewDocument";
 import { Documents } from "../views/Documents";
 import { EditDocument } from "../views/EditDocument";
 import { ForgotPassword } from "../views/ForgotPassword";
+import { AnimalResume } from "../views/AnimalResume";
 
 const Stack = createStackNavigator();
 
@@ -39,6 +40,7 @@ export function DefaultStackRoutes({ page }: PageProps) {
       <Stack.Screen name="NewDocument" component={NewDocument} />
       <Stack.Screen name="EditDocument" component={EditDocument} />
       <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
+      <Stack.Screen name="AnimalResume" component={AnimalResume} />
     </Stack.Navigator>
   );
 }
