@@ -58,6 +58,7 @@ export function SignIn() {
     }).then(response => {
       return response.json();
     }).catch(error => {
+      console.log(error);
       return error.json();
     });
 

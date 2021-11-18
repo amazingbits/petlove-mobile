@@ -33,12 +33,6 @@ export function PetChoice() {
   const { navigate } = useNavigation();
 
   async function handleButtonPressedVaccine() {
-    const dataKey = "@petlove:current_pet_vaccination";
-    const petId = currentPet.id;
-    const endPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
-    const response = await fetch(endPoint, { method: "GET" })
-      .then(response => response.json());
-    await AsyncStorage.setItem(dataKey, JSON.stringify(response));
     navigate("Vaccination");
   }
 

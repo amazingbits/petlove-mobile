@@ -24,6 +24,7 @@ export function Documents() {
     const currentPetJson = JSON.parse(currentPet!);
     const petId = Number(currentPetJson[0].id);
 
+
     const endPoint = `${API_PATH}/documentos/byanimal/${petId}`;
     const response = await fetch(endPoint, { method: "GET" })
       .then(response => response.json());

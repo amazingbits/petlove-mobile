@@ -14,54 +14,41 @@ import { useTheme } from "styled-components";
 import { Header } from "../../components/Header";
 
 interface PetProps {
-  animal_comportamento: string;
-  animal_raca: string;
-  dono: string;
-  id: string;
-  nascimento: string;
   nome: string;
-  sexo: string;
-}
-
-interface VaccinationProps {
-  id: number;
-  animal: number;
-  vacina: number;
-  data_aplicacao: string;
-  descVacina: string;
-  nomeAnimal: string;
-  status: string;
+  id: string;
 }
 
 export function Vaccination() {
   const [currentPet, setCurrentPet] = useState<PetProps>({} as PetProps);
-  const [petVaccination, setPetVaccionation] = useState<VaccinationProps>({} as VaccinationProps);
+  const [petVaccination, setPetVaccionation] = useState([]);
 
   const theme = useTheme();
   const { navigate } = useNavigation();
 
   async function getPetInformation() {
-    const dataKey = "@petlove:current_pet";
-    const pet = await AsyncStorage.getItem(dataKey);
+    const pet = await AsyncStorage.getItem("@petlove:current_pet");
     const petJson = JSON.parse(pet!);
     const params = {
-      animal_comportamento: petJson[0].animal_comportamento,
-      animal_raca: petJson[0].animal_raca,
-      dono: petJson[0].dono,
-      id: petJson[0].id,
-      nascimento: petJson[0].nascimento,
       nome: petJson[0].nome,
-      sexo: petJson[0].sexo
+      id: petJson[0].id
     };
 
     setCurrentPet(params);
   }
 
   async function getPetVaccination() {
-    const dataKey = "@petlove:current_pet_vaccination";
-    const vacc = await AsyncStorage.getItem(dataKey);
-    const vaccInfo = JSON.parse(vacc!);
-    setPetVaccionation(vaccInfo);
+
+    await getPetInformation();
+
+    const pet = await AsyncStorage.getItem("@petlove:current_pet");
+    const petJson = JSON.parse(pet!);
+    const petId = petJson[0].id;
+
+    const endPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
+    const response = await fetch(endPoint, { method: "GET" })
+      .then(response => response.json());
+
+    setPetVaccionation(response);
   }
 
   async function handleVaccinationNavigate(vaccination: string) {
@@ -70,9 +57,12 @@ export function Vaccination() {
     navigate("EditVaccination");
   }
 
+  useEffect(() => {
+    getPetVaccination();
+  }, []);
+
   useFocusEffect(
     useCallback(() => {
-      getPetInformation();
       getPetVaccination();
     }, [])
   );

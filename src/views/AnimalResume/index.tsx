@@ -58,13 +58,12 @@ export function AnimalResume() {
     return ("0" + dia).slice(-2) + '/' + ("0" + mes).slice(-2) + '/' + ano;
   }
 
-  useFocusEffect(
-    useCallback(() => {
-      getAnimalInfo();
-      getAnimalVaccinations();
-      getAnimalDocuments();
-    }, [])
-  );
+  useEffect(() => {
+    getAnimalInfo();
+    getAnimalVaccinations();
+    getAnimalDocuments();
+  }, []);
+
 
   if (!animal || !vaccination || !document) {
     return <AppLoading />
