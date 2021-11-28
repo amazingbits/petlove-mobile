@@ -11,6 +11,7 @@ import { PetCard } from "../../components/PetCard";
 import { NewBtn } from "../../components/NewBtn";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Header } from "../../components/Header";
+import { ViewInformation } from "../../components/ViewInformation";
 
 interface UserProps {
   id: string;
@@ -73,6 +74,8 @@ export function Pets() {
       />
 
       <NewBtn onPress={() => navigate("NewPet")} />
+
+      {animalList.length === 0 && <ViewInformation />}
     </Container>
   );
 }

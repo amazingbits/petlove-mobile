@@ -119,6 +119,7 @@ export function NewDocument() {
           onChangeText={setDate}
           mask={Masks.DATE_DDMMYYYY}
           placeholder="Data"
+          keyboardType="numeric"
         />
         <InputText title="Notas" value={notes} onChangeText={setNotes} />
 

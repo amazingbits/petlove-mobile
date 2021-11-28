@@ -12,6 +12,7 @@ import { NewBtn } from "../../components/NewBtn";
 import { ButtonVaccination } from "../../components/ButtonVaccination";
 import { useTheme } from "styled-components";
 import { Header } from "../../components/Header";
+import { ViewInformation } from "../../components/ViewInformation";
 
 interface PetProps {
   nome: string;
@@ -88,6 +89,8 @@ export function Vaccination() {
 
 
       <NewBtn onPress={() => { navigate("NewVaccination") }} />
+
+      {petVaccination.length === 0 && <ViewInformation />}
     </Container>
   );
 }

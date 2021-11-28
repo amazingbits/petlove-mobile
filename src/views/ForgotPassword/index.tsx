@@ -11,13 +11,16 @@ import { InputText } from "../../components/form/InputText";
 import { Button } from "../../components/form/Button";
 import { API_PATH } from "@env";
 import { Alert } from "react-native";
+import { Loading } from "../../components/Loading";
 
 export function ForgotPassword() {
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
 
   const Navigation = useNavigation();
 
   async function sendEmail() {
+    setIsLoading(true);
     if (email.trim().length === 0) {
       return Alert.alert("Insira um e-mail");
     }
@@ -32,6 +35,7 @@ export function ForgotPassword() {
     }
 
     Alert.alert(response.message);
+    setIsLoading(false);
 
   }
 
@@ -45,6 +49,12 @@ export function ForgotPassword() {
         <InputText title="E-mail" value={email} onChangeText={setEmail} />
         <Button title="Enviar e-mail" onPress={sendEmail} />
       </FormWrapper>
+
+      {
+        isLoading && (
+          <Loading />
+        )
+      }
     </Container>
   );
 }

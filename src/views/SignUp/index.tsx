@@ -12,6 +12,7 @@ import { Masks } from "react-native-mask-input";
 import { InputText } from "../../components/form/InputText";
 import { MaskedInput } from "../../components/form/MaskedInput";
 import { Button } from "../../components/form/Button";
+import { Loading } from "../../components/Loading";
 
 import { useNavigation } from "@react-navigation/native";
 
@@ -27,6 +28,7 @@ interface NewUserProps {
 }
 
 export function SignUp() {
+  const [isLoading, setIsLoading] = useState(false);
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPhone, setUserPhone] = useState('');
@@ -37,6 +39,7 @@ export function SignUp() {
   const { navigate } = useNavigation();
 
   async function handleSaveNewUser() {
+    setIsLoading(true);
     const endPoint = `${API_PATH}/usuario/newUserByApp`;
 
     if (userPassword !== userRPassword) {
@@ -65,6 +68,8 @@ export function SignUp() {
       console.log(error);
       return undefined;
     });
+
+    setIsLoading(false);
 
     if (response === undefined) {
       return Alert.alert("Houve um problema ao cadastrar usuário!");
@@ -95,6 +100,8 @@ export function SignUp() {
         <InputText title="Repetir senha" secureTextEntry={true} value={userRPassword} onChangeText={setUserRPassword} />
         <Button title="Cadastrar" onPress={handleSaveNewUser} />
       </FormWrapper>
+
+      {isLoading && <Loading />}
     </Container>
   );
 }

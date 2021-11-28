@@ -13,6 +13,7 @@ import {
 } from "./styles";
 import { Header } from "../../components/Header";
 import { NewBtn } from "../../components/NewBtn";
+import { ViewInformation } from "../../components/ViewInformation";
 
 export function Documents() {
 
@@ -62,6 +63,8 @@ export function Documents() {
       </ListWrapper>
 
       <NewBtn onPress={() => { navigate("NewDocument") }} />
+
+      {documents.length === 0 && <ViewInformation />}
     </Container>
   );
 }

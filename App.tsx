@@ -3,7 +3,7 @@ import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
 
 import React, { useState, useEffect } from 'react';
-import { StatusBar } from 'react-native';
+import { StatusBar, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
 
@@ -53,17 +53,20 @@ export default function App() {
 
   const page = userData.nome !== undefined ? "Home" : "SignIn";
   return (
-    <ThemeProvider theme={theme} >
-      <StatusBar
-        barStyle="light-content"
-        backgroundColor="transparent"
-        translucent
-      />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <ThemeProvider theme={theme} >
 
-      <NavigationContainer>
-        <DefaultStackRoutes page={page} />
-      </NavigationContainer>
+        <StatusBar
+          barStyle="light-content"
+          backgroundColor="transparent"
+          translucent
+        />
 
-    </ThemeProvider>
+        <NavigationContainer>
+          <DefaultStackRoutes page={page} />
+        </NavigationContainer>
+
+      </ThemeProvider>
+    </TouchableWithoutFeedback>
   );
 }
