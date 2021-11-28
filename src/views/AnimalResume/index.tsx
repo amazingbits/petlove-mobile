@@ -18,6 +18,7 @@ import { Header } from "../../components/Header";
 import { Title } from "../../components/animalResume/Title";
 import { VaccinationCard } from "../../components/animalResume/VaccinationCard";
 import { DocumentCard } from "../../components/animalResume/DocumentCard";
+import { Loading } from "../../components/Loading";
 
 export function AnimalResume() {
   const [animal, setAnimal] = useState(null);
@@ -66,7 +67,7 @@ export function AnimalResume() {
 
 
   if (!animal || !vaccination || !document) {
-    return <AppLoading />
+    return <Loading />
   }
 
   const docPath = `${API_PATH}/public/documentos/`;
