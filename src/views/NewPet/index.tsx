@@ -138,7 +138,7 @@ export function NewPet() {
           </SelectItem>
         </SelectItemView>
 
-        <MaskedInput value={birth} onChangeText={setBirth} mask={Masks.DATE_DDMMYYYY} placeholder="Data de nascimento" />
+        <MaskedInput value={birth} onChangeText={setBirth} mask={Masks.DATE_DDMMYYYY} placeholder="Data de nascimento" keyboardType="numeric" />
 
         <SelectItemView>
           <SelectItem
