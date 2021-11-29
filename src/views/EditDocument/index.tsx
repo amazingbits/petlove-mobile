@@ -17,6 +17,7 @@ import { InputText } from "../../components/form/InputText";
 import { MaskedInput } from "../../components/form/MaskedInput";
 import { Button } from "../../components/form/Button";
 import { Alert } from "react-native";
+import { FileSuccessCard, FileSuccessText } from "../NewDocument/styles";
 
 export function EditDocument() {
 
@@ -26,6 +27,7 @@ export function EditDocument() {
   const [notes, setNotes] = useState("");
   const [animal, setAnimal] = useState("");
   const [file, setFile] = useState("");
+  const [fileIsLoaded, setFileIsLoaded] = useState(false);
 
   const Navigation = useNavigation();
 
@@ -108,6 +110,7 @@ export function EditDocument() {
       }
 
       setFile(sFile);
+      setFileIsLoaded(true);
     }
   }
 
@@ -181,6 +184,12 @@ export function EditDocument() {
         <File onPress={getFile}>
           <FileText>Alterar Arquivo</FileText>
         </File>
+
+        {fileIsLoaded &&
+          <FileSuccessCard>
+            <FileSuccessText>Documento inserido!</FileSuccessText>
+          </FileSuccessCard>
+        }
 
         <Button title="Salvar" onPress={save} />
         <Button title="Excluir" onPress={showAlertDialog} />

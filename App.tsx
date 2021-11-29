@@ -1,10 +1,9 @@
+import React, { useState, useEffect } from 'react';
+
 import 'react-native-gesture-handler';
 import 'intl';
 import 'intl/locale-data/jsonp/pt-BR';
-
-import React, { useState, useEffect } from 'react';
 import { StatusBar, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import AppLoading from 'expo-app-loading';
 import { ThemeProvider } from 'styled-components';
 
 import {
@@ -19,7 +18,7 @@ import theme from './src/global/styles/theme';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { NavigationContainer } from "@react-navigation/native";
 import { DefaultStackRoutes } from "./src/routes/app.route";
-import { Home } from "./src/views/Home";
+import { Loading } from './src/components/Loading';
 
 
 export default function App() {
@@ -48,25 +47,25 @@ export default function App() {
   });
 
   if (!fontsLoaded) {
-    return <AppLoading />;
+    return <Loading />;
   }
 
   const page = userData.nome !== undefined ? "Home" : "SignIn";
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <ThemeProvider theme={theme} >
+    <ThemeProvider theme={theme} >
 
-        <StatusBar
-          barStyle="light-content"
-          backgroundColor="transparent"
-          translucent
-        />
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
 
-        <NavigationContainer>
+      <NavigationContainer>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <DefaultStackRoutes page={page} />
-        </NavigationContainer>
+        </TouchableWithoutFeedback>
+      </NavigationContainer>
 
-      </ThemeProvider>
-    </TouchableWithoutFeedback>
+    </ThemeProvider>
   );
 }

@@ -13,6 +13,7 @@ import { ButtonVaccination } from "../../components/ButtonVaccination";
 import { useTheme } from "styled-components";
 import { Header } from "../../components/Header";
 import { ViewInformation } from "../../components/ViewInformation";
+import { Loading } from "../../components/Loading";
 
 interface PetProps {
   nome: string;
@@ -22,6 +23,7 @@ interface PetProps {
 export function Vaccination() {
   const [currentPet, setCurrentPet] = useState<PetProps>({} as PetProps);
   const [petVaccination, setPetVaccionation] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
   const { navigate } = useNavigation();
@@ -38,7 +40,7 @@ export function Vaccination() {
   }
 
   async function getPetVaccination() {
-
+    setIsLoading(true);
     await getPetInformation();
 
     const pet = await AsyncStorage.getItem("@petlove:current_pet");
@@ -50,6 +52,7 @@ export function Vaccination() {
       .then(response => response.json());
 
     setPetVaccionation(response);
+    setIsLoading(false);
   }
 
   async function handleVaccinationNavigate(vaccination: string) {
@@ -69,6 +72,8 @@ export function Vaccination() {
   );
 
   const title = `${currentPet.nome} - Vacinação`;
+  if (isLoading) return <Loading />
+
   return (
     <Container>
       <Header title={title} />

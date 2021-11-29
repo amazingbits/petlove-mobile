@@ -14,13 +14,16 @@ import {
 import { Header } from "../../components/Header";
 import { NewBtn } from "../../components/NewBtn";
 import { ViewInformation } from "../../components/ViewInformation";
+import { Loading } from "../../components/Loading";
 
 export function Documents() {
 
   const { navigate } = useNavigation();
   const [documents, setDocuments] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   async function getDocumentList() {
+    setIsLoading(true);
     const currentPet = await AsyncStorage.getItem("@petlove:current_pet");
     const currentPetJson = JSON.parse(currentPet!);
     const petId = Number(currentPetJson[0].id);
@@ -31,6 +34,7 @@ export function Documents() {
       .then(response => response.json());
 
     setDocuments(response);
+    setIsLoading(false);
   }
 
   async function goToDocumentUpdate(documentId: string) {
@@ -44,6 +48,7 @@ export function Documents() {
     }, [])
   );
 
+  if (isLoading) return <Loading />
   return (
     <Container>
       <Header title="Documentos" />

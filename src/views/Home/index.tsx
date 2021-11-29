@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Text } from "react-native";
 import * as Location from 'expo-location';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -24,6 +23,8 @@ interface LocationProps {
 }
 
 import { API_PATH, API_IP } from "@env";
+import { ViewInformation } from "../../components/ViewInformation";
+import { Loading } from "../../components/Loading";
 
 export function Home() {
 
@@ -31,6 +32,7 @@ export function Home() {
   const [company, setCompany] = useState([]);
   const [search, setSearch] = useState('');
   const [userData, setUserData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const imgServerPrefix = `http://${API_IP}/petlove/sistema/assets/media/user_img/`;
   const Navigation = useNavigation();
@@ -43,6 +45,7 @@ export function Home() {
   }
 
   async function loadCompanies() {
+    setIsLoading(true);
     if (location) {
       const endPoint = `${API_PATH}/usuario/pesquisarempresas/raio/${location.latitude}/${location.longitude}`;
       const companies = await fetch(endPoint, { method: "GET" })
@@ -51,17 +54,21 @@ export function Home() {
     } else {
       findCompanyByName("");
     }
+    setIsLoading(false);
   }
 
   async function getUserLocation() {
     let { status } = await Location.requestForegroundPermissionsAsync();
     const dataKey = "@petlove:location";
+    await AsyncStorage.removeItem(dataKey);
+    setLocation(null);
     if (status !== "granted") {
       //usuário não permitiu a localicação
       await AsyncStorage.removeItem(dataKey);
       setLocation(null);
     } else {
       let location = await Location.getCurrentPositionAsync({});
+      console.log("Localização", location);
       const locationData = {
         longitude: String(location.coords.latitude),
         latitude: String(location.coords.longitude)
@@ -102,6 +109,7 @@ export function Home() {
     loadCompanies();
   }, [location]);
 
+  if (isLoading) return <Loading />
   return (
     <Container>
       <Header>
@@ -121,20 +129,21 @@ export function Home() {
         showsVerticalScrollIndicator={false}
         data={company}
         keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <CompanyCard
-            id={item.id}
-            name={item.name}
-            phone={item.phone}
-            photo={imgServerPrefix + item.photo}
-            street={item.street}
-            number={item.number}
-          />
-        )}
+        renderItem={
+          ({ item }) =>
+            <CompanyCard
+              id={item.id}
+              name={item.name}
+              phone={item.phone}
+              photo={imgServerPrefix + item.photo}
+              street={item.street}
+              number={item.number}
+            />
+        }
       />
 
       {
-        !company && <Text>Nenhuma empresa encontrada</Text>
+        company.length === 0 && <ViewInformation />
       }
       <BottomMenu />
     </Container>

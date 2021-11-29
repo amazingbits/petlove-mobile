@@ -9,7 +9,9 @@ import {
   Container,
   FormWrapper,
   File,
-  FileText
+  FileText,
+  FileSuccessCard,
+  FileSuccessText
 } from "./styles";
 import { InputText } from "../../components/form/InputText";
 import { MaskedInput } from "../../components/form/MaskedInput";
@@ -28,6 +30,7 @@ export function NewDocument() {
   const [description, setDescription] = useState("");
   const [notes, setNotes] = useState("");
   const [file, setFile] = useState("");
+  const [fileIsLoaded, setFileIsLoaded] = useState(false);
 
   const Navigation = useNavigation();
 
@@ -47,7 +50,7 @@ export function NewDocument() {
       const extension = expFileName[expFileName.length - 1].toLowerCase().trim();
 
       if (extension !== "pdf") {
-        return Alert.alert("A imagem precisa estar em PDF!");
+        return Alert.alert("O arquivo precisa estar em PDF!");
       }
 
       if (sFile.size > 2000000) {
@@ -55,6 +58,7 @@ export function NewDocument() {
       }
 
       setFile(sFile);
+      setFileIsLoaded(true);
     }
   }
 
@@ -126,6 +130,13 @@ export function NewDocument() {
         <File onPress={getFile}>
           <FileText>Selecionar Arquivo</FileText>
         </File>
+
+        {fileIsLoaded &&
+          <FileSuccessCard>
+            <FileSuccessText>Documento inserido!</FileSuccessText>
+          </FileSuccessCard>
+        }
+
 
         <Button title="Cadastrar" onPress={save} />
       </FormWrapper>

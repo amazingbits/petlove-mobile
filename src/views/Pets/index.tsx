@@ -12,6 +12,7 @@ import { NewBtn } from "../../components/NewBtn";
 import { useNavigation, useFocusEffect } from "@react-navigation/native";
 import { Header } from "../../components/Header";
 import { ViewInformation } from "../../components/ViewInformation";
+import { Loading } from "../../components/Loading";
 
 interface UserProps {
   id: string;
@@ -60,6 +61,8 @@ export function Pets() {
   useFocusEffect(() => {
     getAnimalList(userInfo.id);
   });
+
+  if (animalList.length === 0) { return <Loading /> }
 
   return (
     <Container>
