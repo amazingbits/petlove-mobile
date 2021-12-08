@@ -130,6 +130,10 @@ export function EditVaccination() {
     }, [])
   );
 
+  useEffect(() => {
+    getVaccinationInfo();
+  }, []);
+
   return (
     <Container>
       <Header title="Alterar data da vacinação" />

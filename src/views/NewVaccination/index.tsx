@@ -69,9 +69,10 @@ export function NewVaccination() {
     if (Number(response.status) === 201) {
       const newEndPoint = `${API_PATH}/vacinacao/byanimal/${petId}`;
       const newList = await fetch(newEndPoint, { method: "GET" })
-        .then(response => response.json());
+        .then(response => response.json())
+        .catch(error => console.log(error));
       const dataKey = "@petlove:current_pet_vaccination";
-      AsyncStorage.setItem(dataKey, JSON.stringify(newList));
+      await AsyncStorage.setItem(dataKey, JSON.stringify(newList));
       limparFormulario();
       Navigation.goBack();
     }

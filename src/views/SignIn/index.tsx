@@ -70,6 +70,8 @@ export function SignIn() {
       const dataKey = "@petlove:user";
       await AsyncStorage.setItem(dataKey, JSON.stringify(response));
       Alert.alert("Usuário logado com sucesso!");
+      setUserLogin('');
+      setUserPassword('');
       navigate("Home");
     }
   }

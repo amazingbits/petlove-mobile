@@ -22,7 +22,7 @@ export function Pets() {
 
   const dataKey = "@petlove:user";
   const [userInfo, setUserInfo] = useState<UserProps>({} as UserProps);
-  const [animalList, setAnimalList] = useState([]);
+  const [animalList, setAnimalList] = useState('');
 
   const { navigate } = useNavigation();
 
@@ -62,7 +62,7 @@ export function Pets() {
     getAnimalList(userInfo.id);
   });
 
-  if (animalList.length === 0) { return <Loading /> }
+  if (animalList === '') { return <Loading /> }
 
   return (
     <Container>
